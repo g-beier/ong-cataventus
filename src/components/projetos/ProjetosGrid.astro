@@ -1,0 +1,160 @@
+---
+import { getCollection } from "astro:content";
+import ProjetoCard from "./ProjetoCard.astro";
+
+const projetos = await getCollection("projetos");
+
+const brandColors = [
+  { bg: "bg-brand-cyan", text: "text-ink", badge: "bg-ink/10" },
+  { bg: "bg-brand-orange", text: "text-white", badge: "bg-white/20" },
+  { bg: "bg-brand-beige", text: "text-ink", badge: "bg-ink/10" },
+  { bg: "bg-brand-lime", text: "text-ink", badge: "bg-ink/10" },
+  { bg: "bg-brand-yellow", text: "text-ink", badge: "bg-ink/10" },
+  { bg: "bg-brand-blue", text: "text-ink", badge: "bg-ink/10" },
+  { bg: "bg-brand-pink", text: "text-ink", badge: "bg-ink/10" },
+];
+
+// Índices 0, 5 e 10 recebem col-span-2 — encaixa 13 itens em 4 linhas sem gaps
+const wideSet = new Set([0, 5, 10]);
+---
+
+<div class="projetos-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+  {projetos.map((projeto, i) => (
+    <ProjetoCard
+      id={projeto.id}
+      title={projeto.data.title}
+      description={projeto.data.description}
+      objective={projeto.data.objective}
+      targetAudience={projeto.data.targetAudience}
+      status={projeto.data.status}
+      color={brandColors[i % brandColors.length]}
+      wide={wideSet.has(i)}
+    />
+  ))}
+
+  <!-- painel único — col-span-full, reposicionado via CSS order -->
+  <div
+    id="proj-panel"
+    class="col-span-full overflow-hidden"
+    style="max-height: 0; transition: max-height 450ms ease-in-out;"
+    aria-live="polite"
+    hidden
+  >
+    <div class="rounded-2xl border border-rule bg-canvas mt-4 p-6 md:p-8">
+      <div class="flex justify-end mb-4">
+        <button
+          id="pp-close"
+          class="size-8 rounded-full flex items-center justify-center
+                 text-ash hover:text-ink hover:bg-sheet transition-colors"
+          aria-label="Fechar"
+        >✕</button>
+      </div>
+
+      <div class="grid md:grid-cols-[1fr_1.2fr] gap-6 md:gap-10">
+        <div class="flex flex-col justify-between gap-6">
+          <div id="pp-header"></div>
+          <a
+            id="pp-link"
+            href="#"
+            class="inline-flex items-center gap-2 text-sm font-semibold text-brand-orange
+                   hover:gap-3 transition-all duration-200 self-start"
+          >Ver projeto completo →</a>
+        </div>
+
+        <div class="flex flex-col gap-4 border-t md:border-t-0 md:border-l border-rule pt-6 md:pt-0 md:pl-10">
+          <p id="pp-description" class="text-ash leading-relaxed"></p>
+          <p id="pp-objective" class="text-sm text-ink leading-relaxed"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const grid     = document.querySelector(".projetos-grid")!;
+  const panel    = document.getElementById("proj-panel") as HTMLElement;
+  const ppHeader = document.getElementById("pp-header")!;
+  const ppDesc   = document.getElementById("pp-description")!;
+  const ppObj    = document.getElementById("pp-objective")!;
+  const ppLink   = document.getElementById("pp-link") as HTMLAnchorElement;
+  const ppClose  = document.getElementById("pp-close")!;
+
+  const cards = [...grid.querySelectorAll<HTMLElement>(".projeto-card")];
+  let activeCard: HTMLElement | null = null;
+
+  function lastCardInRow(clicked: HTMLElement): HTMLElement {
+    const top = clicked.getBoundingClientRect().top;
+    const inRow = cards.filter((c) => Math.abs(c.getBoundingClientRect().top - top) < 8);
+    return inRow.reduce((last, c) => cards.indexOf(c) > cards.indexOf(last) ? c : last);
+  }
+
+  function populate(data: { id: string; title: string; description: string; objective: string; targetAudience: string[]; status: string }) {
+    ppHeader.innerHTML = `
+      <div class="flex flex-wrap gap-2 mb-3">
+        <span class="text-xs font-semibold uppercase tracking-widest bg-brand-orange/10 text-brand-orange rounded-full px-3 py-1">${data.status}</span>
+        ${data.targetAudience.map((a) => `<span class="text-xs bg-sheet text-ash rounded-full px-3 py-1">${a}</span>`).join("")}
+      </div>
+      <h3 class="font-display text-2xl md:text-3xl leading-tight">${data.title}</h3>`;
+    ppDesc.textContent = data.description;
+    ppObj.innerHTML = `<span class="font-semibold">Objetivo: </span>${data.objective}`;
+    ppLink.href = `/projetos/${data.id}`;
+  }
+
+  function openPanel(card: HTMLElement) {
+    const data = JSON.parse(card.dataset.card!);
+    const lastIdx = cards.indexOf(lastCardInRow(card));
+
+    cards.forEach((c, i) => (c.style.order = String(i * 2)));
+    panel.style.order = String(lastIdx * 2 + 1);
+
+    populate(data);
+
+    panel.hidden = false;
+    panel.getBoundingClientRect();
+    panel.style.maxHeight = "800px";
+    panel.addEventListener("transitionend", () => {
+      if (panel.style.maxHeight !== "0px") {
+        panel.style.maxHeight = "none";
+        panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }, { once: true });
+
+    card.setAttribute("data-active", "");
+    activeCard = card;
+  }
+
+  function closePanel() {
+    activeCard?.removeAttribute("data-active");
+    panel.style.maxHeight = "0";
+    panel.addEventListener("transitionend", () => {
+      panel.hidden = true;
+      cards.forEach((c) => (c.style.order = ""));
+      panel.style.order = "";
+      activeCard = null;
+    }, { once: true });
+  }
+
+  cards.forEach((card) => {
+    card.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (activeCard === card) {
+        closePanel();
+      } else if (activeCard) {
+        activeCard.removeAttribute("data-active");
+        const prev = activeCard;
+        activeCard = null;
+        panel.style.maxHeight = "0";
+        panel.addEventListener("transitionend", () => {
+          panel.hidden = true;
+          cards.forEach((c) => (c.style.order = ""));
+          panel.style.order = "";
+          openPanel(card);
+        }, { once: true });
+      } else {
+        openPanel(card);
+      }
+    });
+  });
+
+  ppClose.addEventListener("click", closePanel);
+</script>

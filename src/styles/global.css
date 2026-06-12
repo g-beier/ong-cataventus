@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* Fonte */
+  --font-sans: var(--font-outfit), sans-serif;
+  --font-display: var(--font-caprasimo), var(--font-sans);
+
+  /* Paleta da marca (catavento) */
+  --color-brand-cyan: #00d9f6;
+  --color-brand-orange: #f5701c;
+  --color-brand-yellow: #febd11;
+  --color-brand-lime: #c0da1f;
+  --color-brand-blue: #a6ddf4;
+  --color-brand-pink: #f8aed5;
+  --color-brand-beige: #f7dee4;
+
+  /* Neutros (apenas modo claro) */
+  --color-ink: #373435; /* texto principal */
+  --color-muted: #373435; /* alias linter */
+  --color-ash: #7a7476; /* texto secundário */
+  --color-canvas: #fdfdfd; /* fundo da página */
+  --color-sheet: #f5f2ef; /* cards, seções */
+  --color-rule: #e5e0dd; /* bordas */
+}
+
+@layer base {
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+  }
+}

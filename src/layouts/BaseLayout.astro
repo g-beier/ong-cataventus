@@ -1,0 +1,70 @@
+---
+import { Font } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+  canonicalURL?: string | URL;
+  ogImage?: string;
+  ogType?: "website" | "article";
+}
+
+const {
+  title,
+  description,
+  canonicalURL = Astro.url,
+  ogImage,
+  ogType = "website",
+} = Astro.props;
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+
+    <Font cssVariable="--font-outfit" preload />
+    <Font cssVariable="--font-caprasimo" preload />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalURL} />
+    {description && <meta property="og:description" content={description} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+
+    <a
+      href="https://wa.me/+5551999021716"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Fale conosco pelo WhatsApp"
+      class="fixed bottom-6 left-6 z-50
+             flex items-center justify-center
+             w-14 h-14 rounded-full
+             bg-[#25d366] text-white shadow-lg
+             transition-transform duration-200 hover:scale-110 active:scale-95"
+    >
+      <Icon name="ph:whatsapp-logo" class="size-7" />
+    </a>
+  </body>
+</html>

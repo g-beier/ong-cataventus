@@ -1,0 +1,82 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+import { getCollection } from "astro:content";
+
+const todasNoticias = await getCollection("noticias");
+
+const noticias = todasNoticias
+  .filter((n) => !n.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" });
+---
+
+<PageLayout
+  title="Notícias — Cataventus"
+  description="Acompanhe as novidades, eventos e ações da Cataventus."
+>
+  <section class="container mx-auto px-6 py-16 max-w-4xl">
+
+    <div class="mb-12">
+      <p class="text-sm font-semibold uppercase tracking-widest text-brand-orange mb-3">
+        Novidades
+      </p>
+      <h1 class="font-display text-5xl md:text-6xl mb-4">Notícias</h1>
+      <p class="text-ash text-xl max-w-xl">
+        Eventos, ações e histórias da Cataventus.
+      </p>
+    </div>
+
+    {noticias.length === 0 ? (
+      <p class="text-ash">Nenhuma notícia publicada ainda.</p>
+    ) : (
+      <ul class="flex flex-col divide-y divide-rule">
+        {noticias.map((noticia) => (
+          <li>
+            <a
+              href={`/noticias/${noticia.id}`}
+              class="group flex flex-col sm:flex-row gap-4 sm:gap-10 py-8 transition-colors hover:text-brand-orange"
+            >
+              <!-- data -->
+              <time
+                datetime={noticia.data.date.toISOString()}
+                class="text-sm text-ash tabular-nums shrink-0 sm:w-32 sm:pt-1"
+              >
+                {formatDate(noticia.data.date)}
+              </time>
+
+              <!-- conteúdo -->
+              <div class="flex-1 flex flex-col gap-3">
+                <div class="flex flex-wrap gap-2">
+                  {noticia.data.projeto && (
+                    <span class="text-[10px] font-semibold uppercase tracking-widest bg-brand-orange/10 text-brand-orange rounded-full px-2.5 py-0.5">
+                      {noticia.data.projeto.replace(/-/g, " ")}
+                    </span>
+                  )}
+                  {noticia.data.tags.map((tag) => (
+                    <span class="text-[10px] font-medium bg-sheet text-ash rounded-full px-2.5 py-0.5">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <h2 class="font-display text-xl md:text-2xl leading-snug text-ink group-hover:text-brand-orange transition-colors">
+                  {noticia.data.title}
+                </h2>
+                <p class="text-ash text-sm leading-relaxed line-clamp-2">
+                  {noticia.data.description}
+                </p>
+
+                <span class="text-sm font-semibold text-brand-orange flex items-center gap-1 group-hover:gap-2 transition-all duration-200 self-start mt-1">
+                  Ler mais →
+                </span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+
+  </section>
+</PageLayout>

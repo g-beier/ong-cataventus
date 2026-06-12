@@ -1,0 +1,33 @@
+---
+import { Icon } from "astro-icon/components"
+
+interface Stat {
+  amount: string
+  label: string
+  icon: string
+}
+
+interface Props {
+  stats?: Stat[]
+}
+
+const { stats = [] } = Astro.props
+---
+
+<section class="py-14 isolate">
+  <div class="container mx-auto px-6">
+    <div class="flex flex-wrap justify-center">
+      {stats.map(({ amount, label, icon }, i) => (
+        <div class:list={[
+          "flex flex-col items-center text-center px-8 py-6 relative",
+          "w-full sm:w-1/2 lg:w-1/4",
+          i < stats.length - 1 && "lg:border-r lg:border-rule",
+        ]}>
+          <Icon name={icon} class="size-48 text-brand-beige/70 absolute -z-1 bottom-0 inset-x-auto" />
+          <span class="text-6xl font-mono font-medium text-brand-orange">{amount}</span>
+          <span class="mt-2 text-ash leading-snug max-w-40">{label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

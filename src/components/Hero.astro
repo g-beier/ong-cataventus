@@ -1,0 +1,41 @@
+---
+import Catavento from "./Catavento.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = "Chamada em Destaque", description } = Astro.props;
+---
+
+<section
+  class="relative container mx-auto flex min-h-[85vh] flex-col items-stretch overflow-hidden md:flex-row"
+>
+  <!-- coluna esquerda: marca dágua + título -->
+  <div class="relative flex flex-1 items-center px-8 py-16 md:px-12 md:py-20">
+    <!-- catavento marca dágua girando -->
+    <div
+      class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-15 motion-safe:animate-spin"
+      style="animation-duration: 40s;"
+    >
+      <Catavento class="aspect-square w-[min(80%,500px)]" />
+    </div>
+
+    <!-- título -->
+    <h1 class="font-display relative z-10 text-4xl md:text-5xl lg:text-6xl">
+      {title}
+    </h1>
+  </div>
+
+  <!-- coluna direita: texto de apresentação -->
+  <div class="flex flex-1 items-center px-8 pb-16 md:px-12 md:py-20">
+    {
+      description ? (
+        <p class="text-sm leading-relaxed text-balance">{description}</p>
+      ) : (
+        <slot />
+      )
+    }
+  </div>
+</section>

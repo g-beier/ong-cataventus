@@ -1,0 +1,20 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+import ProjetosGrid from "../../components/projetos/ProjetosGrid.astro";
+---
+
+<PageLayout
+  title="Projetos — Cataventus"
+  description="Conheça os projetos da ONG Cataventus que transformam comunidades por meio da contação de histórias."
+>
+  <section class="container mx-auto px-6 py-16">
+    <div class="mb-12">
+      <h1 class="font-display text-5xl md:text-6xl mb-4">Projetos</h1>
+      <p class="text-ash text-xl max-w-xl">
+        Iniciativas que transformam comunidades através da contação de histórias.
+      </p>
+    </div>
+
+    <ProjetosGrid />
+  </section>
+</PageLayout>

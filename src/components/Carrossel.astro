@@ -1,0 +1,152 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Foto {
+  src: string;
+  alt: string;
+  legenda?: string;
+}
+
+interface Props {
+  fotos: Foto[];
+}
+
+const { fotos } = Astro.props;
+---
+
+<figure class="carrossel not-prose my-10" data-carrossel>
+
+  <!-- wrapper com overflow hidden para cortar prev/next e slides -->
+  <div class="relative rounded-2xl overflow-hidden bg-brand-beige">
+
+    <!-- track: sem gap — cada slide ocupa exatamente clientWidth -->
+    <div
+      class="carrossel-track flex overflow-x-auto snap-x snap-mandatory scroll-smooth"
+      aria-label="Galeria de fotos"
+    >
+      {fotos.map((foto, i) => (
+        <div
+          class="carrossel-slide shrink-0 w-full snap-start relative aspect-video"
+          role="group"
+          aria-label={`Foto ${i + 1} de ${fotos.length}`}
+        >
+          <!-- placeholder (sempre atrás, aparece quando img falha) -->
+          <div
+            class="absolute inset-0 flex flex-col items-center justify-center gap-3
+                   bg-linear-to-br from-brand-cyan/30 to-brand-pink/30"
+            aria-hidden="true"
+          >
+            <Icon name="ph:image-broken" class="size-12 text-ash/40" />
+            {foto.legenda && (
+              <span class="text-xs text-ash/60 px-8 text-center">{foto.legenda}</span>
+            )}
+          </div>
+
+          <!-- imagem sobre o placeholder -->
+          <img
+            src={foto.src}
+            alt={foto.alt}
+            class="absolute inset-0 w-full h-full object-cover"
+            loading={i === 0 ? "eager" : "lazy"}
+            decoding="async"
+            onerror="this.classList.add('opacity-0'); this.nextElementSibling?.classList.add('hidden')"
+          />
+
+          <!-- legenda sobre a imagem -->
+          {foto.legenda && (
+            <figcaption
+              class="absolute bottom-0 inset-x-0 bg-linear-to-t from-black/65 to-transparent
+                     text-white text-sm px-5 pt-10 pb-4 leading-snug"
+            >
+              {foto.legenda}
+            </figcaption>
+          )}
+        </div>
+      ))}
+    </div>
+
+    <!-- botões prev / next sobrepostos (só com >1 foto) -->
+    {fotos.length > 1 && (
+      <>
+        <button
+          class="carrossel-prev absolute left-3 top-1/2 -translate-y-1/2
+                 size-9 rounded-full bg-black/30 backdrop-blur-sm text-white
+                 flex items-center justify-center
+                 hover:bg-black/50 transition-colors disabled:opacity-25"
+          aria-label="Foto anterior"
+        ><Icon name="ph:caret-left" class="size-5" /></button>
+        <button
+          class="carrossel-next absolute right-3 top-1/2 -translate-y-1/2
+                 size-9 rounded-full bg-black/30 backdrop-blur-sm text-white
+                 flex items-center justify-center
+                 hover:bg-black/50 transition-colors disabled:opacity-25"
+          aria-label="Próxima foto"
+        ><Icon name="ph:caret-right" class="size-5" /></button>
+      </>
+    )}
+  </div>
+
+  <!-- dots abaixo da imagem (só com >1 foto) -->
+  {fotos.length > 1 && (
+    <div class="carrossel-dots flex justify-center gap-2 mt-3" role="tablist">
+      {fotos.map((_, i) => (
+        <button
+          class="carrossel-dot h-2 rounded-full bg-rule transition-all duration-200
+                 data-active:bg-brand-orange data-active:w-5 w-2"
+          data-index={i}
+          role="tab"
+          aria-label={`Foto ${i + 1}`}
+        />
+      ))}
+    </div>
+  )}
+
+</figure>
+
+<style>
+  .carrossel-track {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .carrossel-track::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-carrossel]").forEach((root) => {
+    const track   = root.querySelector<HTMLElement>(".carrossel-track")!;
+    const slides  = [...root.querySelectorAll<HTMLElement>(".carrossel-slide")];
+    const dots    = [...root.querySelectorAll<HTMLElement>(".carrossel-dot")];
+    const btnPrev = root.querySelector<HTMLButtonElement>(".carrossel-prev");
+    const btnNext = root.querySelector<HTMLButtonElement>(".carrossel-next");
+
+    if (slides.length <= 1) return;
+
+    // com slides w-full e sem gap, scrollLeft / clientWidth = índice exato
+    const idx = () => Math.round(track.scrollLeft / track.clientWidth);
+
+    function goTo(i: number) {
+      const clamped = Math.max(0, Math.min(i, slides.length - 1));
+      track.scrollTo({ left: clamped * track.clientWidth, behavior: "smooth" });
+    }
+
+    function sync() {
+      const current = idx();
+      dots.forEach((d, i) => {
+        i === current
+          ? d.setAttribute("data-active", "")
+          : d.removeAttribute("data-active");
+      });
+      if (btnPrev) btnPrev.disabled = current === 0;
+      if (btnNext) btnNext.disabled = current === slides.length - 1;
+    }
+
+    track.addEventListener("scroll", sync, { passive: true });
+    dots.forEach((d, i) => d.addEventListener("click", () => goTo(i)));
+    btnPrev?.addEventListener("click", () => goTo(idx() - 1));
+    btnNext?.addEventListener("click", () => goTo(idx() + 1));
+
+    sync();
+  });
+</script>

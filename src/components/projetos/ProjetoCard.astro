@@ -1,0 +1,71 @@
+---
+interface Color {
+  bg: string;
+  text: string;
+  badge: string;
+}
+
+interface Props {
+  id: string;
+  title: string;
+  description: string;
+  objective: string;
+  targetAudience: string[];
+  status: string;
+  color: Color;
+  wide?: boolean;
+}
+
+const { id, title, description, objective, targetAudience, status, color, wide = false } = Astro.props;
+
+// "bg-brand-cyan" → "var(--color-brand-cyan)"
+const ringColor = `var(--color-${color.bg.slice(3)})`;
+const cardData = JSON.stringify({ id, title, description, objective, targetAudience, status });
+---
+
+<a
+  href={`/projetos/${id}`}
+  class:list={[
+    "projeto-card group relative rounded-2xl p-6 md:p-8",
+    "flex flex-col justify-between",
+    "min-h-48 md:min-h-56",
+    "transition-all duration-200 sm:hover:-translate-y-1 sm:hover:shadow-lg",
+    "data-[active]:outline data-[active]:outline-[3px] data-[active]:outline-offset-[5px] data-[active]:outline-[var(--ring-color)]",
+    color.bg,
+    color.text,
+    wide ? "sm:col-span-2" : "",
+  ]}
+  style={`--ring-color: ${ringColor}`}
+  data-card={cardData}
+>
+  <div>
+    <span
+      class:list={[
+        "inline-block text-[10px] font-semibold tracking-widest uppercase",
+        "mb-4 rounded-full px-2.5 py-0.5",
+        color.badge,
+      ]}
+    >
+      {status}
+    </span>
+    <h2 class="font-display text-xl leading-tight md:text-2xl">{title}</h2>
+  </div>
+
+  <div class="mt-6 flex items-end justify-between gap-4">
+    <p
+      class:list={[
+        "text-sm leading-snug",
+        color.text === "text-white" ? "opacity-80" : "opacity-60",
+        wide ? "max-w-md" : "max-w-[85%]",
+      ]}
+    >
+      {description}
+    </p>
+    <span
+      class="shrink-0 text-base opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+      aria-hidden="true"
+    >
+      →
+    </span>
+  </div>
+</a>

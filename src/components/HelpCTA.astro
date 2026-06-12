@@ -1,0 +1,123 @@
+---
+import { Icon } from "astro-icon/components"
+import DoacaoModal from "./DoacaoModal.astro"
+
+interface Card {
+  icon: string
+  title: string
+  description: string
+  items: string[]
+  cta: string
+  href: string
+}
+
+const cards: Card[] = [
+  {
+    icon: "ph:hand-heart",
+    title: "Voluntário",
+    description: "Doe seu tempo e talento. Nossas ações acontecem porque pessoas como você escolhem estar presentes.",
+    items: [
+      "Contação de histórias em campo",
+      "Formações e capacitações",
+      "Apoio à gestão e comunicação",
+      "Qualquer cidade, qualquer momento",
+    ],
+    cta: "Quero ser voluntário",
+    href: "/contato",
+  },
+  {
+    icon: "ph:hand-coins",
+    title: "Doador",
+    description: "Cada contribuição financia histórias reais — materiais, deslocamentos e formação de novos contadores.",
+    items: [
+      "Doação mensal recorrente",
+      "Doação pontual via PIX ou cartão",
+      "Nota fiscal e transparência total",
+      "Relatório de impacto periódico",
+    ],
+    cta: "Quero doar",
+    href: "#doacao",
+  },
+  {
+    icon: "ph:handshake",
+    title: "Parceiro",
+    description: "Empresas e instituições que acreditam na educação pela arte. Construa essa história conosco.",
+    items: [
+      "Projetos de responsabilidade social",
+      "Ações internas para colaboradores",
+      "Parceria em editais e captação",
+      "Visibilidade para sua marca",
+    ],
+    cta: "Quero ser parceiro",
+    href: "/contato",
+  },
+]
+---
+
+<section class="py-20 bg-sheet">
+  <div class="container mx-auto px-6">
+
+    <!-- cabeçalho -->
+    <div class="text-center mb-14">
+      <p class="text-sm font-semibold uppercase tracking-widest text-brand-orange mb-3">
+        Faça parte da história
+      </p>
+      <h2 class="text-4xl md:text-5xl leading-tight font-display">
+        Quero ajudar
+      </h2>
+      <p class="mt-4 text-ash text-lg max-w-xl mx-auto leading-relaxed">
+        Escolha como você quer contribuir. Cada forma de ajuda transforma uma vida — e a sua também.
+      </p>
+    </div>
+
+    <!-- cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+      {cards.map(({ icon, title, description, items, cta, href }) => (
+        <div class="flex flex-col rounded-2xl border border-rule bg-canvas overflow-hidden transition-shadow duration-300 hover:shadow-lg hover:shadow-ink/5">
+
+          <!-- faixa de cor no topo -->
+          <div class="h-1.5 w-full bg-brand-orange" />
+
+          <div class="flex flex-col flex-1 p-8 gap-6">
+
+            <!-- ícone + título -->
+            <div class="flex flex-col gap-3">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-brand-orange/15 text-brand-orange">
+                <Icon name={icon} class="size-6" />
+              </div>
+              <h3 class="text-2xl font-bold">{title}</h3>
+              <p class="text-ash leading-relaxed text-sm">{description}</p>
+            </div>
+
+            <!-- divisor -->
+            <div class="border-t border-rule" />
+
+            <!-- lista de itens -->
+            <ul class="flex flex-col gap-3 flex-1">
+              {items.map(item => (
+                <li class="flex items-start gap-3 text-sm">
+                  <span class="mt-0.5 shrink-0 size-4 rounded-full flex items-center justify-center bg-brand-orange/20 text-brand-orange">
+                    <Icon name="ph:check-bold" class="size-2.5" />
+                  </span>
+                  <span class="text-ink leading-snug">{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <!-- botão CTA -->
+            <a
+              href={href}
+              class="mt-2 w-full text-center py-3 px-6 rounded-xl font-semibold text-sm bg-brand-orange text-canvas transition-all duration-200 hover:brightness-95 active:scale-[0.98]"
+            >
+              {cta}
+            </a>
+
+          </div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<DoacaoModal />

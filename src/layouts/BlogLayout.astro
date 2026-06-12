@@ -1,0 +1,62 @@
+---
+import BaseLayout from "./BaseLayout.astro"
+
+interface Props {
+  title: string
+  description?: string
+  publishDate: Date | string
+  author?: string
+  tags?: string[]
+  ogImage?: string
+  canonicalURL?: string | URL
+}
+
+const {
+  title,
+  description,
+  publishDate,
+  author,
+  tags,
+  ogImage,
+  canonicalURL,
+} = Astro.props
+
+const dateStr =
+  publishDate instanceof Date
+    ? publishDate.toISOString()
+    : new Date(publishDate).toISOString()
+
+const jsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: title,
+  ...(description && { description }),
+  datePublished: dateStr,
+  ...(author && { author: { "@type": "Person", name: author } }),
+  ...(ogImage && { image: ogImage }),
+  ...(tags && { keywords: tags.join(", ") }),
+})
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  ogImage={ogImage}
+  canonicalURL={canonicalURL}
+>
+  <Fragment slot="head">
+    <meta property="article:published_time" content={dateStr} />
+    {author && <meta property="article:author" content={author} />}
+    {tags?.map((tag) => <meta property="article:tag" content={tag} />)}
+    <script type="application/ld+json" set:html={jsonLd} />
+  </Fragment>
+
+  <slot name="header" />
+  <main>
+    <article>
+      <slot />
+    </article>
+  </main>
+  <slot name="footer" />
+</BaseLayout>

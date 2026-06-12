@@ -1,0 +1,83 @@
+---
+import Logo from "./Logo.astro";
+
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    title: "Organização",
+    links: [
+      { label: "Quem Somos", href: "/quem-somos" },
+      { label: "Nossa História", href: "/quem-somos#historia" },
+      { label: "Parceiros", href: "/quem-somos#parceiros" },
+    ],
+  },
+  {
+    title: "Projetos",
+    links: [
+      { label: "Todos os Projetos", href: "/projetos" },
+      { label: "Notícias", href: "/noticias" },
+    ],
+  },
+  {
+    title: "Contato",
+    links: [
+      { label: "Fale Conosco", href: "/contato" },
+      {
+        label: "Instagram",
+        href: "https://instagram.com/cataventusong",
+        rel: "noopener noreferrer",
+      },
+    ],
+  },
+];
+---
+
+<footer class="border-t border-rule mt-20">
+  <div class="container mx-auto px-6 py-12">
+    <!-- grade principal -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      <!-- logo + tagline -->
+      <div class="flex flex-col gap-4">
+        <a href="/" aria-label="Cataventus — página inicial">
+          <Logo class="h-24 w-auto" />
+        </a>
+        <p class="text-sm text-ash leading-relaxed max-w-[16rem]">
+          Transformando vidas através da cultura e da arte.
+        </p>
+      </div>
+
+      <!-- colunas de links -->
+      {
+        columns.map(({ title, links }) => (
+          <div class="flex flex-col gap-3">
+            <p class="text-xs font-semibold uppercase tracking-widest text-ash">
+              {title}
+            </p>
+            <ul class="flex flex-col gap-2">
+              {links.map(({ label, href, rel }) => (
+                <li>
+                  <a
+                    href={href}
+                    rel={rel}
+                    class="text-sm text-ink hover:text-brand-orange transition-colors"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- rodapé inferior -->
+    <div
+      class="mt-10 pt-6 border-t border-rule flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-ash"
+    >
+      <span>&copy; {year} Cataventus. Todos os direitos reservados.</span>
+      <span>CNPJ 06.111.224/0001-57</span>
+    </div>
+  </div>
+</footer>

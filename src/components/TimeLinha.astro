@@ -1,0 +1,162 @@
+---
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+
+interface TimelineItem {
+  ano: string;
+  titulo: string;
+  texto: string;
+  imagem?: string | null;
+}
+
+interface Props {
+  items: TimelineItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="relative">
+  <!-- linha vertical -->
+  <div
+    class="absolute left-1/2 top-0 bottom-0 w-px bg-rule -translate-x-1/2 hidden sm:block"
+    aria-hidden="true"
+  />
+
+  <div class="flex flex-col gap-16">
+    {items.map(({ ano, titulo, texto, imagem }, i) => {
+      const isRight = i % 2 === 0;
+      return (
+        <div class="relative grid sm:grid-cols-2 gap-8 md:gap-16 items-start">
+
+          <!-- ponto alinhado verticalmente ao centro do badge do ano (h ~1.25rem, mt 0) -->
+          <div
+            class="absolute left-1/2 top-2.5 -translate-x-1/2 z-10
+                   hidden sm:block w-4 h-4 rounded-full
+                   bg-brand-orange border-2 border-canvas"
+            aria-hidden="true"
+          />
+
+          <!-- conteúdo textual -->
+          <div class:list={[isRight ? "sm:pr-10 order-1" : "sm:pl-10 order-2"]}>
+            <span class="inline-block font-mono text-sm font-semibold bg-brand-orange/10 text-brand-orange rounded-full px-3 py-0.5 mb-4">
+              {ano}
+            </span>
+            <h3 class="font-display text-2xl md:text-3xl mb-4">{titulo}</h3>
+            <p class="text-ash leading-relaxed">{texto}</p>
+          </div>
+
+          <!-- imagem / placeholder — clicável -->
+          <button
+            class:list={[
+              "timeline-img-btn group rounded-2xl overflow-hidden bg-sheet aspect-video",
+              "flex items-center justify-center w-full",
+              "cursor-pointer transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-brand-orange",
+              isRight ? "order-2" : "order-1",
+            ]}
+            data-src={imagem ?? ""}
+            data-titulo={titulo}
+            data-ano={ano}
+            aria-label={`Ampliar imagem: ${titulo}`}
+          >
+            {imagem
+              ? <Image src={imagem} alt={titulo} width={1600} height={900} class="w-full h-full object-cover" />
+              : (
+                <div class="flex flex-col items-center gap-2 pointer-events-none">
+                  <Icon name="ph:image-square" class="size-12 text-rule" />
+                  <span class="text-xs text-ash">Clique para ampliar</span>
+                </div>
+              )
+            }
+          </button>
+
+        </div>
+      );
+    })}
+  </div>
+</div>
+
+<!-- ─── Dialog lightbox ─────────────────────────────── -->
+<dialog
+  id="timeline-dialog"
+  class="w-full max-w-3xl rounded-2xl bg-canvas p-0 shadow-2xl
+         open:flex open:flex-col
+         mx-auto my-auto"
+  aria-modal="true"
+  aria-labelledby="dialog-titulo"
+>
+  <!-- cabeçalho -->
+  <div class="flex items-center justify-between px-6 py-4 border-b border-rule">
+    <div>
+      <span id="dialog-ano" class="font-mono text-xs font-semibold text-brand-orange"></span>
+      <h2 id="dialog-titulo" class="font-display text-xl leading-tight"></h2>
+    </div>
+    <button
+      id="dialog-close"
+      class="size-8 rounded-full flex items-center justify-center
+             text-ash hover:text-ink hover:bg-sheet transition-colors"
+      aria-label="Fechar"
+    >
+      <Icon name="ph:x" class="size-4" />
+    </button>
+  </div>
+
+  <!-- corpo: imagem ou placeholder -->
+  <div id="dialog-body" class="flex-1 flex items-center justify-center bg-sheet min-h-72">
+    <!-- preenchido por JS -->
+  </div>
+</dialog>
+
+<style>
+  #timeline-dialog::backdrop {
+    background: rgb(55 52 53 / 0.75);
+    backdrop-filter: blur(6px);
+  }
+</style>
+
+<script>
+  const dialog = document.getElementById("timeline-dialog") as HTMLDialogElement;
+  const dialogAno = document.getElementById("dialog-ano")!;
+  const dialogTitulo = document.getElementById("dialog-titulo")!;
+  const dialogBody = document.getElementById("dialog-body")!;
+  const closeBtn = document.getElementById("dialog-close")!;
+
+  document.querySelectorAll<HTMLButtonElement>(".timeline-img-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const src = btn.dataset.src ?? "";
+      const titulo = btn.dataset.titulo ?? "";
+      const ano = btn.dataset.ano ?? "";
+
+      dialogAno.textContent = ano;
+      dialogTitulo.textContent = titulo;
+
+      if (src) {
+        dialogBody.innerHTML = `<img src="${src}" alt="${titulo}" class="w-full h-full max-h-[70vh] object-contain p-4" />`;
+      } else {
+        dialogBody.innerHTML = `
+          <div class="flex flex-col items-center gap-3 py-16 text-ash">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-16 opacity-30" fill="currentColor" viewBox="0 0 256 256">
+              <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V158.75l-26.07-26.06a16,16,0,0,0-22.63,0l-20,20-44-44a16,16,0,0,0-22.62,0L40,149.37V56ZM40,200V172l52-52,44,44a8,8,0,0,0,11.31,0l24.13-24.13L216,184.5V200Z"/>
+            </svg>
+            <span class="text-sm">Imagem não disponível</span>
+          </div>`;
+      }
+
+      dialog.showModal();
+    });
+  });
+
+  // fechar pelo botão
+  closeBtn.addEventListener("click", () => dialog.close());
+
+  // fechar clicando no backdrop (fora do dialog)
+  dialog.addEventListener("click", (e) => {
+    const rect = dialog.getBoundingClientRect();
+    const outside =
+      e.clientX < rect.left ||
+      e.clientX > rect.right ||
+      e.clientY < rect.top ||
+      e.clientY > rect.bottom;
+    if (outside) dialog.close();
+  });
+</script>

@@ -1,0 +1,172 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import { Icon } from "astro-icon/components";
+import TimeLinha from "../components/TimeLinha.astro";
+import HeroStats from "../components/HeroStats.astro";
+
+const pilares = [
+  {
+    icon: "ph:book-open-text",
+    label: "Missão",
+    color: "bg-brand-cyan",
+    text: "Promover, nas áreas da educação e da assistência social, o acesso e o incentivo à leitura e a inclusão social e cultural de crianças e jovens — preferencialmente em situação de vulnerabilidade — bem como de pessoas com deficiência e da terceira idade, através da contação de histórias, de forma ética, socialmente responsável e sustentável.",
+  },
+  {
+    icon: "ph:eye",
+    label: "Visão",
+    color: "bg-brand-yellow",
+    text: "Ser entidade de referência nacional no incentivo à leitura e na inclusão social e cultural de crianças e jovens, particularmente aqueles em situação de vulnerabilidade social e/ou pessoas com deficiência, através da contação de histórias.",
+  },
+  {
+    icon: "ph:sparkle",
+    label: "Diferencial",
+    color: "bg-brand-lime",
+    text: "Metodologia inovadora na contação de histórias — com improviso, brincadeiras e interação com o público — aliada a uma compreensão profunda da exclusão social: suas causas, efeitos e formas de reversão.",
+  },
+];
+
+const linha_do_tempo = [
+  {
+    ano: "1999",
+    titulo: "O começo de tudo",
+    texto:
+      'Em meados de abril, nasce o Projeto “Conte Outra Vez…”. O primeiro grupo atendido foram os meninos do Albergue João Paulo II, em Porto Alegre. Com atividades lúdicas e contação de histórias, eles desenvolveram criatividade e autoestima — e chegaram a participar da Feira do Livro apenas sete meses depois, assinando autógrafos e dando entrevistas para jornais de escolas.',
+    imagem: null,
+  },
+  {
+    ano: "2003",
+    titulo: "Do mundo para Porto Alegre",
+    texto:
+      'Durante o II FORUMzinho Social Mundial, o grupo organizou o I Encontro Internacional de Contadores de História, com participantes de todo o Brasil e de outros países. A abertura reuniu aproximadamente mil pessoas, com a peça "Uma Viagem pelas Histórias". No dia 3 de maio de 2003, a CATAVENTUS foi formalmente constituída como associação.',
+    imagem: null,
+  },
+  {ano: "2020", titulo: "A pandemia", texto: "lorem ipsum", imagem: null},
+  {ano: "2024", titulo: "Enchentes no RS", texto: "lorem ipsum", imagem: null},
+];
+
+const diretoria = [
+  { nome: "Erica Mylius", cargo: "Presidente", iniciais: "EM" },
+  { nome: "Maria Alice",  cargo: "Vice-Presidente", iniciais: "MA" },
+];
+---
+
+<PageLayout
+  title="Quem Somos — Cataventus"
+  description="A Cataventus é uma associação de voluntários que usa a contação de histórias como instrumento de inclusão social."
+>
+
+  <!-- ─── Hero ─────────────────────────────────────────────── -->
+  <section class="container mx-auto px-6 py-20 md:py-28">
+    <div class="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-20">
+
+      <!-- Col 1 / Linha 1: label + título -->
+      <div class="flex flex-col justify-end">
+        <p class="text-sm font-semibold uppercase tracking-widest text-brand-orange mb-4">
+          Associação civil sem fins econômicos
+        </p>
+        <h1 class="font-display text-5xl lg:text-6xl leading-tight">
+          A Cataventus
+        </h1>
+      </div>
+
+      <!-- Col 2 / Linhas 1–2: imagem (row-span em md+) -->
+      <div
+        class="md:row-span-2 relative rounded-3xl overflow-hidden bg-brand-beige aspect-4/3 flex items-center justify-center"
+        aria-hidden="true"
+      >
+        <div class="absolute inset-0 bg-linear-to-br from-brand-cyan/30 to-brand-pink/30" />
+        <Icon name="ph:image-square" class="size-16 text-brand-beige relative z-10" />
+        <span class="sr-only">Espaço reservado para foto</span>
+      </div>
+
+      <!-- Col 1 / Linha 2: parágrafo + stats (lg: inline) -->
+      <div class="flex flex-col gap-6">
+        <p class="text-lg text-ash leading-relaxed">
+          Somos constituídos por voluntários de formações e experiências diversas.
+          Usamos a contação de histórias como instrumento de inclusão social —
+          com uma metodologia inovadora que combina improviso, brincadeiras e
+          interação genuína com o público.
+        </p>
+        <!-- stats apenas em lg (dentro da coluna esquerda) -->
+        <HeroStats class="hidden lg:flex max-w-md" />
+      </div>
+
+      <!-- Linha 3: stats em mobile e md (col-span-2, oculto em lg) -->
+      <div class="md:col-span-2 lg:hidden">
+        <HeroStats />
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── Missão / Visão / Diferencial ─────────────────────── -->
+  <section class="bg-sheet py-20">
+    <div class="container mx-auto px-6">
+
+      <div class="mb-12 max-w-xl">
+        <p class="text-sm font-semibold uppercase tracking-widest text-brand-orange mb-3">
+          Nossos princípios
+        </p>
+        <h2 class="font-display text-4xl md:text-5xl">O que nos move</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        {pilares.map(({ icon, label, color, text }) => (
+          <div class="flex flex-col rounded-2xl border border-rule bg-canvas p-8 gap-6">
+            <div class:list={["w-12 h-12 rounded-xl flex items-center justify-center", color]}>
+              <Icon name={icon} class="size-6 text-ink" />
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-ash mb-2">{label}</p>
+              <p class="text-sm text-ink leading-relaxed">{text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── História ──────────────────────────────────────────── -->
+  <section class="container mx-auto px-6 py-20 md:py-28">
+
+    <div class="mb-16 max-w-xl">
+      <p class="text-sm font-semibold uppercase tracking-widest text-brand-orange mb-3">
+        Desde 1999
+      </p>
+      <h2 class="font-display text-4xl md:text-5xl">Nossa história</h2>
+    </div>
+
+    <TimeLinha items={linha_do_tempo} />
+  </section>
+
+  <!-- ─── Diretoria ─────────────────────────────────────────── -->
+  <section class="bg-sheet py-20">
+    <div class="container mx-auto px-6">
+
+      <div class="mb-12 max-w-xl">
+        <p class="text-sm font-semibold uppercase tracking-widest text-brand-orange mb-3">
+          Gestão
+        </p>
+        <h2 class="font-display text-4xl md:text-5xl">Diretoria</h2>
+      </div>
+
+      <div class="flex flex-wrap gap-6">
+        {diretoria.map(({ nome, cargo, iniciais }) => (
+          <div class="flex items-center gap-5 bg-canvas rounded-2xl border border-rule px-6 py-5 min-w-56">
+            <!-- avatar com iniciais -->
+            <div class="w-14 h-14 rounded-full bg-brand-orange/15 text-brand-orange font-semibold text-lg flex items-center justify-center shrink-0 select-none">
+              {iniciais}
+            </div>
+            <div>
+              <p class="font-semibold text-ink">{nome}</p>
+              <p class="text-sm text-ash">{cargo}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+</PageLayout>

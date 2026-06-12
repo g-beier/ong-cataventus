@@ -1,0 +1,71 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import { Icon } from "astro-icon/components";
+
+const canais = [
+  {
+    icon: "ph:whatsapp-logo",
+    label: "WhatsApp",
+    description: "Resposta rápida em horário comercial.",
+    action: "Iniciar conversa",
+    href: "https://wa.me/+5551999021716",
+    color: "bg-[#25d366]",
+    external: true,
+  },
+  {
+    icon: "ph:envelope-simple",
+    label: "E-mail",
+    description: "Para mensagens detalhadas, propostas e parcerias.",
+    action: "cataventus@cataventus.org.br",
+    href: "mailto:cataventus@cataventus.org.br",
+    color: "bg-brand-orange",
+    external: false,
+  },
+];
+---
+
+<PageLayout
+  title="Contato — Cataventus"
+  description="Entre em contato com a Cataventus pelo WhatsApp ou e-mail."
+>
+  <section class="container mx-auto px-6 py-20 md:py-28 max-w-3xl">
+
+    <div class="mb-14">
+      <p class="text-sm font-semibold uppercase tracking-widest text-brand-orange mb-3">
+        Fale conosco
+      </p>
+      <h1 class="font-display text-5xl md:text-6xl mb-4">Contato</h1>
+      <p class="text-ash text-lg max-w-lg leading-relaxed">
+        Escolha o canal que preferir. Respondemos a voluntários, parceiros, imprensa e qualquer pessoa que queira saber mais sobre nosso trabalho.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-4">
+      {canais.map(({ icon, label, description, action, href, color, external }) => (
+        <a
+          href={href}
+          target={external ? "_blank" : undefined}
+          rel={external ? "noopener noreferrer" : undefined}
+          class="group flex flex-col gap-6 rounded-2xl border border-rule bg-canvas p-8
+                 transition-shadow hover:shadow-lg hover:shadow-ink/5"
+        >
+          <div class:list={["w-12 h-12 rounded-xl flex items-center justify-center text-white", color]}>
+            <Icon name={icon} class="size-6" />
+          </div>
+
+          <div class="flex-1">
+            <h2 class="font-semibold text-xl mb-1">{label}</h2>
+            <p class="text-ash text-sm leading-relaxed">{description}</p>
+          </div>
+
+          <span class="inline-flex items-center gap-2 text-sm font-medium text-brand-orange
+                       group-hover:gap-3 transition-all duration-200">
+            {action}
+            <Icon name="ph:arrow-right" class="size-4" />
+          </span>
+        </a>
+      ))}
+    </div>
+
+  </section>
+</PageLayout>

@@ -1,17 +1,33 @@
 ---
-
+import PageLayout from "../layouts/PageLayout.astro";
+import Hero from "../components/Hero.astro";
+import Stats from "../components/Stats.astro";
+import HelpCTA from "../components/HelpCTA.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<PageLayout title="Cataventus" description="ONG Cataventus">
+  <Hero title="Histórias que transformam vidas">
+    <p class="text-2xl">
+      Somos uma associação de voluntários que usa a contação de histórias como
+      instrumento de inclusão social — com improviso, brincadeiras e uma
+      metodologia inovadora.
+    </p>
+  </Hero>
+  <Stats
+    stats={[
+      {
+        amount: "+500.000",
+        label: "pessoas atendidas",
+        icon: "ph:users-three",
+      },
+      { amount: "+150", label: "voluntários ativos", icon: "ph:hand-heart" },
+      { amount: "+1.000", label: "locais visitados", icon: "ph:buildings" },
+      {
+        amount: "+5.000",
+        label: "cursos de contação de histórias",
+        icon: "ph:book-open-text",
+      },
+    ]}
+  />
+  <HelpCTA />
+</PageLayout>

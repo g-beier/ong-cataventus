@@ -1,0 +1,256 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<dialog
+  id="doacao"
+  class="border-rule bg-canvas backdrop:bg-ink/40 isolate m-auto max-h-[90dvh] w-full max-w-lg rounded-2xl border p-0 shadow-2xl backdrop:backdrop-blur-sm open:flex open:flex-col"
+>
+  <!-- cabeçalho -->
+  <div class="border-rule flex items-center justify-between border-b px-8 py-5">
+    <div class="flex items-center gap-3">
+      <div
+        class="bg-brand-orange/15 text-brand-orange flex h-9 w-9 items-center justify-center rounded-lg"
+      >
+        <Icon name="ph:hand-coins" class="size-5" />
+      </div>
+      <h2 class="text-lg font-bold">Como doar</h2>
+    </div>
+    <button
+      id="close-doacao"
+      class="text-ash hover:text-ink cursor-pointer transition-colors"
+      aria-label="Fechar"
+    >
+      <Icon name="ph:x" class="size-5" />
+    </button>
+  </div>
+
+  <!-- conteúdo -->
+  <div class="flex flex-col gap-6 overflow-y-auto px-8 py-6">
+    <!-- PIX -->
+    <div class="flex flex-col gap-3">
+      <p class="text-ash text-sm font-semibold tracking-widest uppercase">
+        PIX
+      </p>
+      <!-- chave -->
+      <div
+        class="bg-sheet border-rule flex items-center justify-between gap-4 rounded-xl border px-4 py-3"
+      >
+        <div>
+          <p class="text-ash mb-0.5 text-xs">Chave (CNPJ)</p>
+          <p class="font-mono text-sm font-medium" id="pix-key">
+            06.111.224/0001-57
+          </p>
+        </div>
+        <button
+          id="copy-pix"
+          class="text-brand-orange flex shrink-0 items-center gap-1.5 text-xs font-semibold transition-all hover:brightness-90"
+          aria-label="Copiar chave PIX"
+        >
+          <Icon name="ph:copy" class="size-4" />
+          <span id="copy-pix-label">Copiar</span>
+        </button>
+      </div>
+      <!-- pix copia e cola -->
+      <div
+        class="bg-sheet border-rule flex items-center justify-between gap-4 rounded-xl border px-4 py-3"
+      >
+        <div class="min-w-0">
+          <p class="text-ash mb-0.5 text-xs">Pix Copia e Cola</p>
+          <p id="pix-code" class="text-ink max-w-60 truncate font-mono text-xs">
+            00020101021126500014br.gov.bcb.pix0114061112240001570210Cataventus5204000053039865802BR5910CATAVENTUS6008BRASILIA62070503***6304AFB3
+          </p>
+        </div>
+        <button
+          id="copy-pix-code"
+          class="text-brand-orange flex shrink-0 items-center gap-1.5 text-xs font-semibold transition-all hover:brightness-90"
+          aria-label="Copiar código PIX"
+        >
+          <Icon name="ph:copy" class="size-4" />
+          <span id="copy-pix-code-label">Copiar</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- divisor -->
+    <div class="flex items-center gap-3">
+      <div class="border-rule flex-1 border-t"></div>
+      <span class="text-ash text-xs">ou sem gastar nada</span>
+      <div class="border-rule flex-1 border-t"></div>
+    </div>
+
+    <!-- Nota Fiscal Gaúcha -->
+    <div
+      class="bg-sheet border-rule flex flex-col gap-3 rounded-xl border px-4 py-4"
+    >
+      <div class="flex items-center gap-2">
+        <Icon name="ph:receipt" class="text-brand-orange size-5 shrink-0" />
+        <p class="text-sm font-semibold">Nota Fiscal Gaúcha</p>
+      </div>
+      <div class="flex flex-col gap-3 pl-7">
+        <p class="text-ash text-xs leading-relaxed">
+          Mora no RS, quer ajudar mas não tem tempo ou recurso? Cadastre-se no
+          programa e indique a Cataventus. Você ainda concorre a prêmios todo
+          mês.
+        </p>
+        <ol class="-ml-7 flex flex-col gap-3">
+          {
+            [
+              "Cadastre-se no site da Nota Fiscal Gaúcha.",
+              "Indique 4 entidades. Escolha a CATAVENTUS em ASSISTÊNCIA SOCIAL (Porto Alegre) ou na categoria LIVRE (outras cidades).",
+              "Peça a inclusão do seu CPF em cada compra — e pronto!",
+            ].map((step, i) => (
+              <li class="text-ink flex items-start gap-2 text-xs leading-relaxed">
+                <span class="bg-brand-orange/20 text-brand-orange flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold">
+                  {i + 1}
+                </span>
+                {step}
+              </li>
+            ))
+          }
+        </ol>
+        <a
+          href="https://www.notafiscalgaucha.rs.gov.br"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-brand-orange flex items-center gap-1.5 self-start text-xs font-semibold transition-all hover:brightness-90"
+        >
+          Acessar o site
+          <Icon name="ph:arrow-square-out" class="size-3.5" />
+        </a>
+      </div>
+    </div>
+
+    <!-- divisor -->
+    <div class="flex items-center gap-3">
+      <div class="border-rule flex-1 border-t"></div>
+      <span class="text-ash text-xs">ou doação de materiais</span>
+      <div class="border-rule flex-1 border-t"></div>
+    </div>
+
+    <!-- Materiais -->
+    <div
+      class="bg-sheet border-rule flex flex-col gap-3 rounded-xl border px-4 py-4"
+    >
+      <div class="flex items-center gap-2">
+        <Icon name="ph:package" class="text-brand-orange size-5 shrink-0" />
+        <p class="text-sm font-semibold">Doe materiais</p>
+      </div>
+      <div class="flex flex-col gap-1 pl-7">
+        <p class="text-ash text-xs leading-relaxed">
+          Livros, fantasias, papelaria e outros materiais são sempre bem-vindos.
+          Entre em contato pelo e-mail:
+        </p>
+        <a
+          href="mailto:cataventus@cataventus.org.br"
+          class="text-brand-orange font-mono text-xs font-medium break-all transition-all hover:brightness-90"
+        >
+          cataventus@cataventus.org.br
+        </a>
+      </div>
+    </div>
+
+    <!-- divisor -->
+    <div class="flex items-center gap-3">
+      <div class="border-rule flex-1 border-t"></div>
+      <span class="text-ash text-xs">ou transferência bancária</span>
+      <div class="border-rule flex-1 border-t"></div>
+    </div>
+
+    <!-- dados bancários -->
+    <div
+      class="bg-sheet border-rule flex flex-col gap-2 rounded-xl border px-4 py-4"
+    >
+      <p class="text-ash mb-1 text-sm font-semibold tracking-widest uppercase">
+        Dados bancários
+      </p>
+      {
+        [
+          { label: "Banco", value: "Banco do Brasil" },
+          { label: "Agência", value: "0000-0" },
+          { label: "Conta", value: "00000-0" },
+          { label: "CNPJ", value: "00.000.000/0001-00" },
+          { label: "Razão social", value: "Associação Cataventus" },
+        ].map(({ label, value }) => (
+          <div class="flex justify-between text-sm">
+            <span class="text-ash">{label}</span>
+            <span class="font-mono font-medium">{value}</span>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- rodapé -->
+    <p class="text-ash pb-2 text-center text-xs leading-relaxed">
+      Emitimos recibo de doação para pessoa jurídica.<br />
+      Dúvidas? Entre em <a
+        href="/contato"
+        class="text-brand-orange underline underline-offset-2">contato</a
+      >.
+    </p>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.getElementById("doacao") as HTMLDialogElement;
+
+  function openDialog() {
+    dialog.showModal();
+  }
+
+  function closeDialog() {
+    dialog.close();
+    history.replaceState(null, "", location.pathname + location.search);
+  }
+
+  function checkHash() {
+    if (location.hash === "#doacao") openDialog();
+  }
+
+  checkHash();
+  window.addEventListener("hashchange", checkHash);
+
+  dialog.addEventListener("click", (e) => {
+    const rect = dialog.getBoundingClientRect();
+    const outside =
+      e.clientX < rect.left ||
+      e.clientX > rect.right ||
+      e.clientY < rect.top ||
+      e.clientY > rect.bottom;
+    if (outside) closeDialog();
+  });
+
+  dialog.addEventListener("close", () => {
+    if (location.hash === "#doacao") {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+  });
+
+  document
+    .getElementById("close-doacao")
+    ?.addEventListener("click", closeDialog);
+
+  async function copyAndFlash(valueId: string, labelId: string) {
+    const value = document.getElementById(valueId)?.textContent?.trim() ?? "";
+    await navigator.clipboard.writeText(value);
+    const label = document.getElementById(labelId);
+    if (label) {
+      label.textContent = "Copiado!";
+      setTimeout(() => {
+        label.textContent = "Copiar";
+      }, 2000);
+    }
+  }
+
+  document
+    .getElementById("copy-pix")
+    ?.addEventListener("click", () =>
+      copyAndFlash("pix-key", "copy-pix-label"),
+    );
+
+  document
+    .getElementById("copy-pix-code")
+    ?.addEventListener("click", () =>
+      copyAndFlash("pix-code", "copy-pix-code-label"),
+    );
+</script>
