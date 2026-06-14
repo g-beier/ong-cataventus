@@ -34,4 +34,4 @@ O formulário de inscrição fica disponível até **31 de agosto de 2024**.
 
 ## Mais informações
 
-Para dúvidas, entre em contato pelo [WhatsApp](https://wa.me/+5551999021716) ou pelo e-mail cataventus@cataventus.org.br.
+Para dúvidas, entre em contato pelo [WhatsApp](https://wa.me/+5551999021716) ou pelo e-mail <cataventus@cataventus.org.br>.
