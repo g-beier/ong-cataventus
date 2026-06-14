@@ -1,49 +1,22 @@
 ---
 import Logo from "./Logo.astro";
+import { footerColumns, siteInfo } from "../config/nav";
 
 const year = new Date().getFullYear();
-
-const columns = [
-  {
-    title: "Organização",
-    links: [
-      { label: "Quem Somos", href: "/quem-somos" },
-      { label: "Nossa História", href: "/quem-somos#historia" },
-      { label: "Parceiros", href: "/quem-somos#parceiros" },
-    ],
-  },
-  {
-    title: "Projetos",
-    links: [
-      { label: "Todos os Projetos", href: "/projetos" },
-      { label: "Notícias", href: "/noticias" },
-    ],
-  },
-  {
-    title: "Contato",
-    links: [
-      { label: "Fale Conosco", href: "/contato" },
-      {
-        label: "Instagram",
-        href: "https://instagram.com/cataventusong",
-        rel: "noopener noreferrer",
-      },
-    ],
-  },
-];
+const columns = footerColumns;
 ---
 
-<footer class="border-t border-rule mt-20">
+<footer class="border-rule mt-20 border-t">
   <div class="container mx-auto px-6 py-12">
     <!-- grade principal -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+    <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
       <!-- logo + tagline -->
       <div class="flex flex-col gap-4">
         <a href="/" aria-label="Cataventus — página inicial">
           <Logo class="h-24 w-auto" />
         </a>
-        <p class="text-sm text-ash leading-relaxed max-w-[16rem]">
-          Transformando vidas através da cultura e da arte.
+        <p class="text-ash max-w-[16rem] text-sm leading-relaxed">
+          {siteInfo.tagline}
         </p>
       </div>
 
@@ -51,16 +24,17 @@ const columns = [
       {
         columns.map(({ title, links }) => (
           <div class="flex flex-col gap-3">
-            <p class="text-xs font-semibold uppercase tracking-widest text-ash">
+            <p class="text-ash text-xs font-semibold tracking-widest uppercase">
               {title}
             </p>
             <ul class="flex flex-col gap-2">
-              {links.map(({ label, href, rel }) => (
+              {links.map(({ label, href, rel, target }) => (
                 <li>
                   <a
                     href={href}
                     rel={rel}
-                    class="text-sm text-ink hover:text-brand-orange transition-colors"
+                    target={target}
+                    class="text-ink hover:text-brand-orange text-sm transition-colors"
                   >
                     {label}
                   </a>
@@ -74,10 +48,10 @@ const columns = [
 
     <!-- rodapé inferior -->
     <div
-      class="mt-10 pt-6 border-t border-rule flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-ash"
+      class="border-rule text-ash mt-10 flex flex-col items-center justify-between gap-2 border-t pt-6 text-xs sm:flex-row"
     >
-      <span>&copy; {year} Cataventus. Todos os direitos reservados.</span>
-      <span>CNPJ 06.111.224/0001-57</span>
+      <span>&copy; {year} {siteInfo.name}. Todos os direitos reservados.</span>
+      <span>CNPJ {siteInfo.cnpj}</span>
     </div>
   </div>
 </footer>

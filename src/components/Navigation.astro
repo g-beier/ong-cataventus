@@ -1,17 +1,12 @@
 ---
-const links = [
-  { href: "/quem-somos", label: "Quem Somos" },
-  { href: "/projetos", label: "Projetos" },
-  { href: "/noticias", label: "Notícias" },
-  { href: "/contato", label: "Contato" },
-]
+import { navLinks } from "../config/nav"
 
 const current = Astro.url.pathname
 ---
 
 <nav id="nav-menu" class="hidden md:flex items-center gap-6" aria-label="Menu principal">
   <ul class="flex flex-col md:flex-row items-start md:items-center gap-1 md:gap-6">
-    {links.map(({ href, label }) => {
+    {navLinks.map(({ href, label }) => {
       const active = current === href || current.startsWith(href + "/")
       return (
         <li>
